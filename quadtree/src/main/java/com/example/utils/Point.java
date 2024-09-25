@@ -1,6 +1,6 @@
-package com.example;
+package com.example.utils;
 
-class Point {
+public class Point {
   public double x;
   public double y;
 

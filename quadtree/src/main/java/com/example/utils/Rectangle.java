@@ -1,6 +1,6 @@
-package com.example;
+package com.example.utils;
 
-class Rectangle {
+public class Rectangle {
   public double x;
   public double y;
   public double width;
