@@ -18,4 +18,11 @@ public class Point {
     Point point = (Point) o;
     return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0;
   }
+
+  public double getX() {
+    return x;
+  }
+  public double getY() {
+    return y;
+  }
 }

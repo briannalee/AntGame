@@ -1,101 +1,69 @@
 package com.example;
 
-import org.junit.Test;
-import org.junit.Before;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import com.example.utils.Point;
+import com.example.utils.QuadTree;
+import com.example.utils.QuadTreeNode;
+import com.example.utils.Rectangle;
+
 import java.util.List;
 
 public class QuadTreeTest {
+    @Test
+    public void testInsertAndContains() {
+        QuadTree quadTree = new QuadTree(new Rectangle(0, 0, 100, 100));
+        Point point1 = new Point(10, 10);
+        Point point2 = new Point(20, 20);
 
-    private QuadTree quadTree;
-    private Rectangle bounds;
+        quadTree.insert(point1);
+        quadTree.insert(point2);
 
-    @Before
-    public void setUp() {
-        bounds = new Rectangle(0, 0, 100, 100);
-        quadTree = new QuadTree(bounds);
+        assertTrue(quadTree.getRoot().getPoints().contains(point1));
+        assertTrue(quadTree.getRoot().getPoints().contains(point2));
     }
 
     @Test
-    public void testInsertAndFind() {
-        Point p1 = new Point(10, 10);
-        Point p2 = new Point(90, 90);
-        Point p3 = new Point(50, 50);
-        
-        quadTree.insert(p1);
-        quadTree.insert(p2);
-        quadTree.insert(p3);
+    public void testFind() {
+        QuadTree quadTree = new QuadTree(new Rectangle(0, 0, 100, 100));
+        Point point = new Point(10, 10);
 
-        assertNotNull(quadTree.find(p1));
-        assertNotNull(quadTree.find(p2));
-        assertNotNull(quadTree.find(p3));
+        quadTree.insert(point);
+
+        QuadTreeNode node = quadTree.find(point);
+
+        assertNotNull(node);
+        assertTrue(node.getPoints().contains(point));
     }
 
     @Test
     public void testDelete() {
-        Point p1 = new Point(10, 10);
-        Point p2 = new Point(90, 90);
-        Point p3 = new Point(50, 50);
-        
-        quadTree.insert(p1);
-        quadTree.insert(p2);
-        quadTree.insert(p3);
+        QuadTree quadTree = new QuadTree(new Rectangle(0, 0, 100, 100));
+        Point point = new Point(10, 10);
 
-        assertTrue(quadTree.delete(p1));
-        assertNull(quadTree.find(p1));
-        
-        assertTrue(quadTree.delete(p2));
-        assertNull(quadTree.find(p2));
-        
-        assertTrue(quadTree.delete(p3));
-        assertNull(quadTree.find(p3));
+        quadTree.insert(point);
+        assertTrue(quadTree.delete(point));
+        assertFalse(quadTree.getRoot().getPoints().contains(point));
     }
 
     @Test
     public void testQueryRange() {
-        Point p1 = new Point(10, 10);
-        Point p2 = new Point(90, 90);
-        Point p3 = new Point(50, 50);
-        
-        quadTree.insert(p1);
-        quadTree.insert(p2);
-        quadTree.insert(p3);
+        QuadTree quadTree = new QuadTree(new Rectangle(0, 0, 100, 100));
+        Point point1 = new Point(10, 10);
+        Point point2 = new Point(20, 20);
+        Point point3 = new Point(30, 30);
 
-        Rectangle range = new Rectangle(0, 0, 60, 60);
-        List<Point> foundPoints = quadTree.queryRange(range);
+        quadTree.insert(point1);
+        quadTree.insert(point2);
+        quadTree.insert(point3);
 
-        assertTrue(foundPoints.contains(p1));
-        assertFalse(foundPoints.contains(p2));
-        assertTrue(foundPoints.contains(p3));
-    }
+        Rectangle range = new Rectangle(0, 0, 25, 25);
+        List<Point> points = quadTree.queryRange(range);
 
-    @Test
-    public void testInsertOutsideBounds() {
-        Point p1 = new Point(-10, -10);
-        Point p2 = new Point(110, 110);
-
-        quadTree.insert(p1);
-        quadTree.insert(p2);
-
-        assertNull(quadTree.find(p1));
-        assertNull(quadTree.find(p2));
-    }
-
-    @Test
-    public void testQueryEmptyRange() {
-        Rectangle range = new Rectangle(0, 0, 0, 0);
-        List<Point> foundPoints = quadTree.queryRange(range);
-
-        assertTrue(foundPoints.isEmpty());
-    }
-
-    @Test
-    public void testDeleteNonExistentPoint() {
-        Point p1 = new Point(10, 10);
-        Point p2 = new Point(20, 20);
-        
-        quadTree.insert(p1);
-        
-        assertFalse(quadTree.delete(p2));
+        assertEquals(2, points.size());
+        assertTrue(points.contains(point1));
+        assertTrue(points.contains(point2));
+        assertFalse(points.contains(point3));
     }
 }

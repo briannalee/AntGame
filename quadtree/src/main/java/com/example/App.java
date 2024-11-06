@@ -2,6 +2,7 @@ package com.example;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,22 +16,26 @@ public class App extends ApplicationAdapter {
     private Player player;
     private OrthographicCamera camera;
     private ShapeRenderer shapeRenderer;
+    private Graphics graphics;
+
+
 
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Underground Terrain Simulation");
         config.setWindowedMode(800, 600);
-        new Lwjgl3Application(new App(), config);
+        new Lwjgl3Application(new App(), config); // Pass Gdx.graphics
     }
 
     @Override
     public void create() {
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        graphics = Gdx.graphics;
+        camera = new OrthographicCamera(graphics.getWidth(), graphics.getHeight());
+        camera.setToOrtho(false, graphics.getWidth(), graphics.getHeight());
         shapeRenderer = new ShapeRenderer();
 
         terrainManager = new TerrainManager();
-        player = new Player(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, terrainManager.getQuadTree());
+        player = new Player(graphics.getWidth() / 2, graphics.getHeight() / 2, terrainManager.getQuadTree());
         terrainManager.addPlayer(player);
     }
 
@@ -54,5 +59,33 @@ public class App extends ApplicationAdapter {
     @Override
     public void dispose() {
         shapeRenderer.dispose();
+    }
+
+    Player getPlayer() {
+        return player;
+    }
+
+    TerrainManager getTerrainManager() {
+        return terrainManager;
+    }
+
+    OrthographicCamera getCamera() {
+        return camera;
+    }
+
+    void setCamera(OrthographicCamera camera) {
+        this.camera = camera;
+    }
+
+    void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    void setTerrainManager(TerrainManager terrainManager) {
+        this.terrainManager = terrainManager;
+    }
+
+    void setShapeRenderer(ShapeRenderer shapeRenderer) {
+        this.shapeRenderer = shapeRenderer;
     }
 }

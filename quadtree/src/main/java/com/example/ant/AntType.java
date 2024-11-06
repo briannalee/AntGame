@@ -28,8 +28,8 @@ public enum AntType {
 
     public enum AntRole {
         QUEEN(1.5f, 0.5f, 0.2f),
-        FIGHTER(1.2f, 0.9f, 1.2f),
-        WORKER(0.8f, 0.6f, 0.8f);
+        FIGHTER(1.2f, 1.2f, 1.2f),
+        WORKER(0.8f, 0.8f, 0.8f);
 
         private final float healthModifier;
         private final float movementSpeedModifier;
