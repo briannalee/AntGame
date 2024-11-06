@@ -1,5 +1,7 @@
 package com.example;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.example.ant.NPC;
 import com.example.ant.Player;
 import com.example.terrain.TerrainManager;
 
@@ -17,7 +20,7 @@ public class App extends ApplicationAdapter {
     private OrthographicCamera camera;
     private ShapeRenderer shapeRenderer;
     private Graphics graphics;
-
+    public static ArrayList<NPC> NPCs;
 
 
     public static void main(String[] args) {
@@ -29,6 +32,7 @@ public class App extends ApplicationAdapter {
 
     @Override
     public void create() {
+        NPCs = new ArrayList<NPC>();
         graphics = Gdx.graphics;
         camera = new OrthographicCamera(graphics.getWidth(), graphics.getHeight());
         camera.setToOrtho(false, graphics.getWidth(), graphics.getHeight());
@@ -51,6 +55,9 @@ public class App extends ApplicationAdapter {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         terrainManager.drawTerrain(shapeRenderer);
         player.draw(shapeRenderer);
+        for (NPC npc : NPCs) {
+            npc.draw(shapeRenderer);
+        }
         shapeRenderer.end();
 
         player.handleMovement(deltaTime);

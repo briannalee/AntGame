@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.example.ant.AntType.*;
 import com.example.terrain.TerrainManager;
 import com.example.utils.Point;
 import com.example.utils.QuadTree;
@@ -14,7 +13,7 @@ public class Player extends Ant {
     private static final float MOVEMENT_COOLDOWN = 0.1f; // Movement cooldown time in seconds
 
     public Player(float x, float y, QuadTree quadTree) {
-        super(AntType.BLACK, AntRole.WORKER, x, y, quadTree);
+        super(AntType.BLACK, AntType.AntRole.WORKER, x, y, quadTree);
     }
 
     @Override
@@ -24,7 +23,7 @@ public class Player extends Ant {
             return; // If cooldown is still active, don't move
         }
 
-        float moveX = 0f, moveY = 0f;
+        float moveX = 0, moveY = 0;
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
             moveY += 1;
@@ -70,6 +69,11 @@ public class Player extends Ant {
             }
 
             timeSinceLastMove = MOVEMENT_COOLDOWN; // Set the cooldown
+
+            // Check if we need to spawn an NPC
+            if (this.getQuadTree().countClearedPoints() >= 20) {
+                NPC.createNPC((float)this.x, (float)this.y, this.getQuadTree());
+            }
         }
     }
 
