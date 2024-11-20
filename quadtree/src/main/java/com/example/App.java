@@ -41,8 +41,10 @@ public class App extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
 
         terrainManager = new TerrainManager();
-        player = new Player(graphics.getWidth() / 2, graphics.getHeight() / 2, terrainManager.getQuadTree());
-        terrainManager.addPlayer(player);
+        // Set the player position to be the center of the QuadTree bounds
+        player = terrainManager.addPlayer();
+
+        camera.position.set((float)player.getX(), (float)player.getY(), 0);
     }
 
     // Render method to update the application state and draw the scene
@@ -64,7 +66,7 @@ public class App extends ApplicationAdapter {
 
         // Draw everything
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        terrainManager.drawTerrain(shapeRenderer);
+        terrainManager.drawTerrain(shapeRenderer, camera.position.x, camera.position.y);
         player.draw(shapeRenderer);
         for (NPCAnt npc : NPCs) {
             npc.draw(shapeRenderer);
@@ -118,28 +120,29 @@ public class App extends ApplicationAdapter {
         float halfScreenWidth = camera.viewportWidth / 2;
         float halfScreenHeight = camera.viewportHeight / 2;
         float margin = 15; // Margin before the camera moves
-    
+
         // Player position
         float playerX = (float) player.getX();
         float playerY = (float) player.getY();
-    
+
         // Camera's current boundaries
         float leftBound = camera.position.x - halfScreenWidth + margin;
         float rightBound = camera.position.x + halfScreenWidth - margin;
         float bottomBound = camera.position.y - halfScreenHeight + margin;
         float topBound = camera.position.y + halfScreenHeight - margin;
-    
+
         // Adjust camera position to follow the player
         if (playerX < leftBound) {
             camera.position.x += playerX - leftBound;
         } else if (playerX > rightBound) {
-            camera.position.x += playerX - rightBound; 
+            camera.position.x += playerX - rightBound;
         }
-    
+
         if (playerY < bottomBound) {
-            camera.position.y += playerY - bottomBound; 
+            camera.position.y += playerY - bottomBound;
         } else if (playerY > topBound) {
-            camera.position.y += playerY - topBound; 
+            camera.position.y += playerY - topBound;
         }
     }
+
 }
