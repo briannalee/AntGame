@@ -10,7 +10,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.example.ant.NPC;
+import com.example.ant.NPCAnt;
 import com.example.ant.Player;
 import com.example.terrain.TerrainManager;
 
@@ -20,9 +20,9 @@ public class App extends ApplicationAdapter {
     private OrthographicCamera camera;
     private ShapeRenderer shapeRenderer;
     private Graphics graphics;
-    public static ArrayList<NPC> NPCs;
+    public static ArrayList<NPCAnt> NPCs;
 
-
+    // Main method to start the application
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Underground Terrain Simulation");
@@ -30,9 +30,10 @@ public class App extends ApplicationAdapter {
         new Lwjgl3Application(new App(), config); // Pass Gdx.graphics
     }
 
+    // Create method to initialize the application
     @Override
     public void create() {
-        NPCs = new ArrayList<NPC>();
+        NPCs = new ArrayList<NPCAnt>();
         graphics = Gdx.graphics;
         camera = new OrthographicCamera(graphics.getWidth(), graphics.getHeight());
         camera.setToOrtho(false, graphics.getWidth(), graphics.getHeight());
@@ -43,6 +44,7 @@ public class App extends ApplicationAdapter {
         terrainManager.addPlayer(player);
     }
 
+    // Render method to update the application state and draw the scene
     @Override
     public void render() {
         float deltaTime = Gdx.graphics.getDeltaTime();
@@ -55,7 +57,7 @@ public class App extends ApplicationAdapter {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         terrainManager.drawTerrain(shapeRenderer);
         player.draw(shapeRenderer);
-        for (NPC npc : NPCs) {
+        for (NPCAnt npc : NPCs) {
             npc.draw(shapeRenderer);
         }
         shapeRenderer.end();
@@ -63,35 +65,43 @@ public class App extends ApplicationAdapter {
         player.handleMovement(deltaTime);
     }
 
+    // Dispose method to clean up resources
     @Override
     public void dispose() {
         shapeRenderer.dispose();
     }
 
+    // Getter for the player
     Player getPlayer() {
         return player;
     }
 
+    // Getter for the terrain manager
     TerrainManager getTerrainManager() {
         return terrainManager;
     }
 
+    // Getter for the camera
     OrthographicCamera getCamera() {
         return camera;
     }
 
+    // Setter for the camera
     void setCamera(OrthographicCamera camera) {
         this.camera = camera;
     }
 
+    // Setter for the player
     void setPlayer(Player player) {
         this.player = player;
     }
 
+    // Setter for the terrain manager
     void setTerrainManager(TerrainManager terrainManager) {
         this.terrainManager = terrainManager;
     }
 
+    // Setter for the shape renderer
     void setShapeRenderer(ShapeRenderer shapeRenderer) {
         this.shapeRenderer = shapeRenderer;
     }

@@ -4,16 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.example.App;
+import com.example.ant.AntType.*;
 import com.example.terrain.TerrainManager;
 import com.example.utils.Point;
 import com.example.utils.QuadTree;
 
+import java.util.List;
+
 public class Player extends Ant {
     private float timeSinceLastMove = 0;
     private static final float MOVEMENT_COOLDOWN = 0.1f; // Movement cooldown time in seconds
+    private int clearedSquares = 0; // Counter for cleared squares
 
     public Player(float x, float y, QuadTree quadTree) {
-        super(AntType.BLACK, AntType.AntRole.WORKER, x, y, quadTree);
+        super(AntType.BLACK, AntRole.WORKER, x, y, quadTree);
     }
 
     @Override
@@ -56,6 +61,7 @@ public class Player extends Ant {
                 float y = (float)this.y + moveY * TerrainManager.CELL_SIZE * i;
                 Point newPos = new Point(x, y);
                 this.getQuadTree().insert(newPos);
+                clearedSquares++; // Increment the cleared squares counter
             }
 
             // Update the player's position
@@ -70,10 +76,26 @@ public class Player extends Ant {
 
             timeSinceLastMove = MOVEMENT_COOLDOWN; // Set the cooldown
 
-            // Check if we need to spawn an NPC
-            if (this.getQuadTree().countClearedPoints() >= 20) {
-                NPC.createNPC((float)this.x, (float)this.y, this.getQuadTree());
-            }
+            // Check if we need to spawn NPCs
+            CheckClearedArea();
+        }
+    }
+
+    private void CheckClearedArea() {
+        if (clearedSquares >= 20) {
+            CreateNPC();
+            clearedSquares = 0; // Reset the cleared squares counter
+        }
+    }
+
+    private void CreateNPC() {
+        // Create NPC at a random cleared position
+        List<Point> clearedPoints = this.getQuadTree().getRoot().getPoints();
+        if (!clearedPoints.isEmpty()) {
+            int index = (int) (Math.random() * clearedPoints.size());
+            Point spawnPoint = clearedPoints.get(index);
+            NPCAnt npc = new NPCAnt((float)spawnPoint.x, (float)spawnPoint.y, this.getQuadTree());
+            App.NPCs.add(npc);
         }
     }
 
