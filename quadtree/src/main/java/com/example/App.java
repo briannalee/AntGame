@@ -10,6 +10,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.example.ant.NPCAnt;
 import com.example.ant.Player;
 import com.example.terrain.TerrainManager;
@@ -51,9 +52,17 @@ public class App extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Update player movement
+        player.handleMovement(deltaTime);
+
+        // Update camera position based on player position
+        updateCamera();
+
+        // Update and render the camera
         camera.update();
         shapeRenderer.setProjectionMatrix(camera.combined);
 
+        // Draw everything
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         terrainManager.drawTerrain(shapeRenderer);
         player.draw(shapeRenderer);
@@ -61,8 +70,6 @@ public class App extends ApplicationAdapter {
             npc.draw(shapeRenderer);
         }
         shapeRenderer.end();
-
-        player.handleMovement(deltaTime);
     }
 
     // Dispose method to clean up resources
@@ -104,5 +111,35 @@ public class App extends ApplicationAdapter {
     // Setter for the shape renderer
     void setShapeRenderer(ShapeRenderer shapeRenderer) {
         this.shapeRenderer = shapeRenderer;
+    }
+
+    private void updateCamera() {
+        // Screen dimensions
+        float halfScreenWidth = camera.viewportWidth / 2;
+        float halfScreenHeight = camera.viewportHeight / 2;
+        float margin = 15; // Margin before the camera moves
+    
+        // Player position
+        float playerX = (float) player.getX();
+        float playerY = (float) player.getY();
+    
+        // Camera's current boundaries
+        float leftBound = camera.position.x - halfScreenWidth + margin;
+        float rightBound = camera.position.x + halfScreenWidth - margin;
+        float bottomBound = camera.position.y - halfScreenHeight + margin;
+        float topBound = camera.position.y + halfScreenHeight - margin;
+    
+        // Adjust camera position to follow the player
+        if (playerX < leftBound) {
+            camera.position.x += playerX - leftBound;
+        } else if (playerX > rightBound) {
+            camera.position.x += playerX - rightBound; 
+        }
+    
+        if (playerY < bottomBound) {
+            camera.position.y += playerY - bottomBound; 
+        } else if (playerY > topBound) {
+            camera.position.y += playerY - topBound; 
+        }
     }
 }
