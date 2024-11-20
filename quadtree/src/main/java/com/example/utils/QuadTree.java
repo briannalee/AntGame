@@ -36,4 +36,9 @@ public class QuadTree {
     public QuadTreeNode getRoot() {
       return root;
     }
+
+    // Checks if a given rectangle is entirely contained within the bounds of the quadtree
+    public boolean contains(Rectangle rectangle) {
+        return root.getBounds().contains(rectangle);
+    }
 }

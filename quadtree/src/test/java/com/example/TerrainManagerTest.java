@@ -12,7 +12,7 @@ public class TerrainManagerTest {
         TerrainManager terrainManager = new TerrainManager();
         Point player = new Point(10, 10);
 
-        terrainManager.addPlayer(player);
+        terrainManager.addPlayer();
 
         assertTrue(terrainManager.getQuadTree().getRoot().getPoints().contains(player));
     }
