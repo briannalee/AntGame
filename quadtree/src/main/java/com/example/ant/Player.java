@@ -96,6 +96,7 @@ public class Player extends Ant {
             Point spawnPoint = clearedPoints.get(index);
             NPCAnt npc = new NPCAnt((float)spawnPoint.x, (float)spawnPoint.y, this.getQuadTree());
             App.NPCs.add(npc);
+            App.getTerrainManager().spawnEnemyAnt((float)spawnPoint.x, (float)spawnPoint.y);
         }
     }
 

@@ -10,13 +10,13 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
+import com.example.ant.EnemyAnt;
 import com.example.ant.NPCAnt;
 import com.example.ant.Player;
 import com.example.terrain.TerrainManager;
 
 public class App extends ApplicationAdapter {
-    private TerrainManager terrainManager;
+    private static TerrainManager terrainManager;
     private Player player;
     private OrthographicCamera camera;
     private ShapeRenderer shapeRenderer;
@@ -41,10 +41,9 @@ public class App extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
 
         terrainManager = new TerrainManager();
-        // Set the player position to be the center of the QuadTree bounds
         player = terrainManager.addPlayer();
 
-        camera.position.set((float)player.getX(), (float)player.getY(), 0);
+        camera.position.set((float) player.getX(), (float) player.getY(), 0);
     }
 
     // Render method to update the application state and draw the scene
@@ -72,6 +71,11 @@ public class App extends ApplicationAdapter {
             npc.draw(shapeRenderer);
         }
         shapeRenderer.end();
+
+        // Update enemy ants
+        for (EnemyAnt enemyAnt : terrainManager.getEnemyAnts()) {
+            enemyAnt.handleMovement(deltaTime);
+        }
     }
 
     // Dispose method to clean up resources
@@ -81,12 +85,12 @@ public class App extends ApplicationAdapter {
     }
 
     // Getter for the player
-    Player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
     // Getter for the terrain manager
-    TerrainManager getTerrainManager() {
+    public static TerrainManager getTerrainManager() {
         return terrainManager;
     }
 
@@ -96,22 +100,22 @@ public class App extends ApplicationAdapter {
     }
 
     // Setter for the camera
-    void setCamera(OrthographicCamera camera) {
+    public void setCamera(OrthographicCamera camera) {
         this.camera = camera;
     }
 
     // Setter for the player
-    void setPlayer(Player player) {
+    public void setPlayer(Player player) {
         this.player = player;
     }
 
     // Setter for the terrain manager
-    void setTerrainManager(TerrainManager terrainManager) {
+    public void setTerrainManager(TerrainManager terrainManager) {
         this.terrainManager = terrainManager;
     }
 
     // Setter for the shape renderer
-    void setShapeRenderer(ShapeRenderer shapeRenderer) {
+    public void setShapeRenderer(ShapeRenderer shapeRenderer) {
         this.shapeRenderer = shapeRenderer;
     }
 
@@ -144,5 +148,4 @@ public class App extends ApplicationAdapter {
             camera.position.y += playerY - topBound;
         }
     }
-
 }

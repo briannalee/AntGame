@@ -2,20 +2,26 @@ package com.example.terrain;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.example.ant.EnemyAnt;
 import com.example.ant.Player;
 import com.example.utils.Point;
 import com.example.utils.QuadTree;
 import com.example.utils.QuadTreeNode;
 import com.example.utils.Rectangle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TerrainManager {
     public static final int CELL_SIZE = 10;
     private static final int CHUNK_SIZE = 1000; // Size of each terrain chunk (adjustable)
     private QuadTree quadTree;
+    private List<EnemyAnt> enemyAnts;
 
     public TerrainManager() {
         // Initialize the quad tree with a large initial bounds
         quadTree = new QuadTree(new Rectangle(0, 0, CHUNK_SIZE * 10, CHUNK_SIZE * 10));
+        enemyAnts = new ArrayList<>();
     }
 
     public Player addPlayer() {
@@ -47,6 +53,11 @@ public class TerrainManager {
         // Draw the cleared terrain as light brown
         shapeRenderer.setColor(new Color(0.824f, 0.706f, 0.549f, 1)); // Light brown color
         drawClearedTerrain(shapeRenderer, quadTree.getRoot(), visibleArea);
+
+        // Draw enemy ants
+        for (EnemyAnt enemyAnt : enemyAnts) {
+            enemyAnt.draw(shapeRenderer);
+        }
     }
 
     private void loadNearbyChunks(Rectangle visibleArea) {
@@ -98,5 +109,14 @@ public class TerrainManager {
 
     public QuadTree getQuadTree() {
         return quadTree;
+    }
+
+    public List<EnemyAnt> getEnemyAnts() {
+        return enemyAnts;
+    }
+
+    public void spawnEnemyAnt(float x, float y) {
+        EnemyAnt enemyAnt = new EnemyAnt(x, y, quadTree);
+        enemyAnts.add(enemyAnt);
     }
 }
